@@ -17,7 +17,7 @@ dependencies = [
     "astropy>=6.0",
     "typer[all]>=0.9",    # CLI
     "rich>=13.7",
-    "textual>=0.61",      # TUI Wizard
+    "textual>=3.1.1",      # TUI Wizard
 ]
 
 [project.optional-dependencies]

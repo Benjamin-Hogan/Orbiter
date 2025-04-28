@@ -1,40 +1,36 @@
+from pathlib import Path
 from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, Button, Static, Input
+from textual.widgets import Header, Footer, TabbedContent, Static
 
-class Wizard(App):
-    """Terminal-UI front door for Orbiter."""
-    TITLE = "🛰️  Orbiter V1  — Hohmann ΔV Calculator"
+from .panes.maneuvers import ManeuversPane
+from .panes.propagation import PropagationPane
+from .panes.constants import ConstantsPane
+
+class CustomHeader(Header):
+    def __init__(self, title: str, custom_content: str = ""):
+        super().__init__(title)
+        self.custom_content = custom_content
 
     def compose(self) -> ComposeResult:
-        yield Header()  # Removed 'title' and 'show_clock' arguments
-        yield Static("Enter your orbit radii (SI units, metres):", id="prompt")
-        yield Input(placeholder="Initial radius (e.g. 6771000)", id="input-r1")
-        yield Input(placeholder="Target radius  (e.g. 42164000)", id="input-r2")
-        yield Button("Compute ΔV", id="btn-hohmann")
-        yield Static("", id="result")
+        yield Static(self.custom_content, id="custom-content")
+        yield from super().compose()
+
+class Wizard(App):
+    CSS_PATH = str(Path(__file__).with_name("wizard.css"))
+    TITLE = "🛰️  Orbiter V1"
+
+    def compose(self) -> ComposeResult:
+        yield CustomHeader(self.TITLE, custom_content="Welcome to Orbiter Wizard!")
+
+        # Create TabbedContent with tabs and their content directly
+        yield TabbedContent(
+            ("Maneuvers", ManeuversPane(id="tab-maneuvers")),
+            ("Propagation", PropagationPane(id="tab-propagation")),
+            ("Constants", ConstantsPane(id="tab-constants")),
+            id="tabs"
+        )
+
         yield Footer()
-
-    async def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-hohmann":
-            # grab user text
-            r1_str = self.query_one("#input-r1", Input).value
-            r2_str = self.query_one("#input-r2", Input).value
-
-            # try to parse & compute
-            try:
-                r1 = float(r1_str)
-                r2 = float(r2_str)
-                from orbiter.core.maneuvers import hohmann_delta_v
-                dv1, dv2, total = hohmann_delta_v(r1, r2)
-
-                # display nicely
-                self.query_one("#result", Static).update(
-                    f"🚀 ΔV₁: {dv1:,.1f} m/s   ΔV₂: {dv2:,.1f} m/s   •  Total: {total:,.1f} m/s"
-                )
-            except ValueError:
-                self.query_one("#result", Static).update(
-                    "[red]Invalid input. Please enter numeric values for both radii.[/]"
-                )
 
 if __name__ == "__main__":
     Wizard().run()
