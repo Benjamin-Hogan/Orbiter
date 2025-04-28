@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "orbiter"
+version = "0.1.0"
+description = "Open-source orbit determination & maneuver calculator"
+authors = [{name = "Benjamin Hogan"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.9"
+
+dependencies = [
+    "numpy>=1.26",
+    "astropy>=6.0",
+    "typer[all]>=0.9",    # CLI
+    "rich>=13.7",
+    "textual>=0.61",      # TUI Wizard
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "mypy",
+]
+
+[project.scripts]
+orb = "orbiter.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

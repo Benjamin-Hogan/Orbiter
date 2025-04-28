@@ -1,0 +1,18 @@
+# Ignore build artifacts
+*.egg-info/
+__pycache__/
+**/__pycache__/
+
+# Ignore compiled Python files
+*.pyc
+*.pyo
+
+# Ignore temporary files
+*.tmp
+*.log
+
+# Ignore architecture-specific files
+Architecture/
+
+# Ignore egg-info directory
+*.egg-info/
