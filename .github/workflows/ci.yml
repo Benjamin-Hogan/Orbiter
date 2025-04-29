@@ -14,5 +14,5 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install .[dev]
-      - run: ruff src/ tests
+      - run: ruff check src/ tests
       - run: pytest -q
