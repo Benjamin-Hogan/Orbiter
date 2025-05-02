@@ -17,9 +17,11 @@ class OrbiterApp(App):
         with Horizontal():
             with Vertical(id="sidebar"):
                 # Maneuvers category
-                yield Static("Maneuvers", classes="category-header")
-                yield Button("Hohmann Transfer", id="btn-hohmann")
-                yield Button("Plane Change", id="btn-plane-change")
+                with Container(classes="category-container"):
+                    yield Static("Maneuvers", classes="category-header")
+                    with Container(classes="category-buttons"):
+                        yield Button("Hohmann Transfer", id="btn-hohmann")
+                        yield Button("Plane Change", id="btn-plane-change")
                 
                 # Time calculations category
                 yield Static("Time Calculations", classes="category-header")
