@@ -2,6 +2,15 @@
 *.egg-info/
 __pycache__/
 **/__pycache__/
+build/
+dist/
+# Ignore virtual environment directories
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+
 
 # Ignore compiled Python files
 *.pyc
