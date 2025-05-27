@@ -1,8 +1,9 @@
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical, Container
 from textual.widgets import Header, Footer, Button, Static
+from textual.widgets import Collapsible  # Uncomment this line
 from textual import on
-from orbiter.ui.panes.maneuvers.HohmannPane import HohmannPane  # Explicit class import
+from orbiter.ui.panes.maneuvers.HohmannPane import HohmannPane
 from orbiter.ui.panes.maneuvers.PlaneChangePane import PlaneChangePane
 from orbiter.ui.panes.time.UniversalTimeOfFlightPane import UniversalTimeOfFlightPane
 from orbiter.ui.panes.time.TimeOfFlightToPositionPane import TimeOfFlightToPositionPane
@@ -10,27 +11,31 @@ from orbiter.ui.panes.propagation.TheKeplerProblemPane import TheKeplerProblemPa
 
 
 class OrbiterApp(App):
-    CSS_PATH = "wizard.tcss"  # Put layout and styling in here
+    CSS_PATH = "wizard.tcss"
 
     def compose(self) -> ComposeResult:
         yield Header()
         with Horizontal():
             with Vertical(id="sidebar"):
                 # Maneuvers category
-                with Container(classes="category-container"):
-                    yield Static("Maneuvers", classes="category-header")
-                    with Container(classes="category-buttons"):
-                        yield Button("Hohmann Transfer", id="btn-hohmann")
-                        yield Button("Plane Change", id="btn-plane-change")
-                
+                collapsible = Collapsible(title="Maneuvers")
+                with collapsible:
+                    yield Button("Hohmann Transfer", id="btn-hohmann", classes="dropdown-button")
+                    yield Button("Plane Change", id="btn-plane-change", classes="dropdown-button")
+                yield collapsible
+
                 # Time calculations category
-                yield Static("Time Calculations", classes="category-header")
-                yield Button("Universal Time of Flight", id="btn-universal-tof")
-                yield Button("Time of Flight to Position", id="btn-tof-position")
-                
+                collapsible = Collapsible(title="Time Calculations")
+                with collapsible:
+                    yield Button("Universal Time of Flight", id="btn-universal-tof", classes="dropdown-button")
+                    yield Button("Time of Flight to Position", id="btn-tof-position", classes="dropdown-button")
+                yield collapsible
+
                 # Propagation category
-                yield Static("Propagation", classes="category-header")
-                yield Button("Kepler Problem", id="btn-kepler")
+                collapsible = Collapsible(title="Propagation")
+                with collapsible:
+                    yield Button("Kepler Problem", id="btn-kepler", classes="dropdown-button")
+                yield collapsible
                 
             yield Container(HohmannPane(), id="main-pane")  # Default view
         yield Footer()
